@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="RobustSwap, Face swap, Identity Manupulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RobustSwap: A Simple yet Robust Face Swapping Model against Attribute Leakage</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <!-- <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div> -->
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">RobustSwap: A Simple yet Robust Face Swapping Model against Attribute Leakage</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://leejesse.github.io">Jaeseong Lee</a><sup>1</sup></a><sup>*</sup></a>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/taeu/">Taewoo Kim</a><sup>2</sup></a><sup>*</sup></a>,</span>
+            <span class="author-block">
+              <a href="https://psh01087.github.io/">Sunghyun Park</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/younggun-lee-99aa1b92/">Younggun Lee</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://sites.google.com/site/jaegulchoo/">Jaegul Choo</a><sup>1</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>KAIST,</span>
+            <span class="author-block"><sup>2</sup>Neosapience</span>
+          </div>
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+          
+              <!-- Code Link. -->
+              
+              <!-- Dataset Link. -->
+              
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <!-- <image id="teaser" height="100%">
+        <source src="./static/images/teaser.mp4"
+                type="image/mp4">
+      </image> -->
+      <img src="./static/images/teaser.png" id="half-size-flamingo">
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">RobustSwap</span> is robust to any attribute leakage from source image. No matter what sources are set, targets attributes(e.g., hair style, expression, eye gazing, head-pose and skin color) are preserved.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="harry" autoplay controls muted loop playsinline width="100%">
+            
+            <source src="./static/videos/minji_with_src.mp4"
+                    type="video/mp4">
+            
+          </video>
+          
+
+          
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/cooper_with_src.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/elon_with_src.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/harry_with_src.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/soohyuk_with_src.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/jennie_with_src.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/emrata_with_src.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+        
+          <p>
+            Face swapping aims at injecting a source image's identity (i.e., facial features) into a target image, while strictly preserving the target's attributes, which are irrelevant to identity. 
+            However, we observed that previous approaches still suffer from source attribute leakage, where the source image's attributes interfere with the target image’s.
+          <p>
+          </p>
+            In this paper, we analyze the latent space of StyleGAN and find the adequate combination of the latents geared for face swapping task. 
+            Based on the findings, we develop a simple yet robust face swapping model, RobustSwap, which is resistant to the potential source attribute leakage. 
+            Moreover, we exploit the coordination of 3DMM's implicit and explicit information as a guidance to incorporate the structure of the source image and the precise pose of the target image.
+          <p>
+          </p> 
+            Despite our method solely utilizing an image dataset without identity labels for training, our model has the capability to generate high-fidelity and temporally consistent videos. 
+            Through extensive qualitative and quantitative evaluations, we demonstrate that our method shows significant improvements compared with the previous face swapping models in synthesizing both images and videos.
+          </p>
+       
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+   
+</section>
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="title is-3">Method</h2>
+      <!-- <image id="teaser" height="100%">
+        <source src="./static/images/teaser.mp4"
+                type="image/mp4">
+      </image> -->
+      <img src="./static/images/model_final.png" id="half-size-flamingo">
+      <h2 class="subtitle has-text-centered">
+        Our <span class="dnerf">RobustSwap</span> leveraged the cooperation of StyleGAN's spatial and vector latent space for adequatly preserve the target information and inject source information. 
+        We found the most proper latents combination for constructing a source attribute leakage-robust face swapping model.
+      </h2>
+    </div>
+  </div>
+</section>
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="title is-3">Megapixel baselines comparison</h2>
+      <!-- <image id="teaser" height="100%">
+        <source src="./static/images/teaser.mp4"
+                type="image/mp4">
+      </image> -->
+      <img src="./static/images/mega_comp1.png" id="half-size-flamingo">
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">RobustSwap</span> outperforms other recent megapixel baselines (e.g., <a href="https://www.ecva.net/papers/eccv_2022/papers_ECCV/papers/136730145.pdf">MFIM</a>, <a href="https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_High-Resolution_Face_Swapping_via_Latent_Semantics_Disentanglement_CVPR_2022_paper.pdf">FSLSD</a> and <a href="https://openaccess.thecvf.com/content/CVPR2021/papers/Zhu_One_Shot_Face_Swapping_on_Megapixels_CVPR_2021_paper.pdf">MegaFS</a>), in the respect of target attribute perservation and source identity reflection on CelebA-HQ dataset.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="title is-3">All baselines comparison</h2>
+      <!-- <image id="teaser" height="100%">
+        <source src="./static/images/teaser.mp4"
+                type="image/mp4">
+      </image> -->
+      <img src="./static/images/FF++2.png" id="half-size-flamingo">
+      <h2 class="subtitle has-text-centered">
+        Unlike other baseline, our <span class="dnerf">RobustSwap</span> seamlessly reflect 
+        the source identity without harming the target attribute preservation on FF++ dataset.
+        
+      </h2>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="center">
+      <div class="hero-body">
+        <h2 class="title is-3">Comparison with <a href="https://www.ecva.net/papers/eccv_2022/papers_ECCV/papers/136740644.pdf">StyleSwap</a></h2>
+        <!-- <image id="teaser" height="100%">
+          <source src="./static/images/teaser.mp4"
+                  type="image/mp4">
+        </image> -->
+        <img src="./static/images/retrieve.png" id="half-size-flamingo",height="500",class='center'>
+   
+        <h2 class="subtitle has-text-centered">
+          StyleSwap is also a state-of-the-art baseline leveraged StyleGAN.
+          Although StyleSwap's open-source code is not released
+          to the public, we proved the superiority of our RobustSwap with retrieved images,
+          Please pay attention to the red box which indicates the result’s pupil. 
+          The source and target images are from CelebA-HQ train dataset.
+        </h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="center">
+      <div class="hero-body">
+        <h2 class="title is-3">In-the-wilds results</h2>
+        <!-- <image id="teaser" height="100%">
+          <source src="./static/images/teaser.mp4"
+                  type="image/mp4">
+        </image> -->
+        <img src="./static/images/inthewild_integ.png" id="half-size-flamingo",height="500",class='center'>
+   
+        <!-- <h2 class="subtitle has-text-centered">
+          <span class="dnerf">RobustSwap</span> outperforms other recent baselines (e.g., <a href="https://www.ecva.net/papers/eccv_2022/papers_ECCV/papers/136730145.pdf">MFIM</a>, <a href="https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_High-Resolution_Face_Swapping_via_Latent_Semantics_Disentanglement_CVPR_2022_paper.pdf">FSLSD</a> and <a href="https://openaccess.thecvf.com/content/CVPR2021/papers/Zhu_One_Shot_Face_Swapping_on_Megapixels_CVPR_2021_paper.pdf">MegaFS</a>) in the respect of target attribute perservation and source identity reflection.
+        </h2> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+   
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Identity interpolation</h2>
+
+        <!-- Interpolating. -->
+        <h3 class="title is-4">Example</h3>
+        <div class="content has-text-justified">
+          <p>
+            We can also mix the identity by interpolating the latent codes of source and target.
+            Enjoy with this slider toggle for identity interpolation.
+            You might witness that all other attributes are preserved except for the identity.
+          </p>
+        </div>
+        <div class="columns is-vcentered interpolation-panel">
+          <div class="column is-3 has-text-centered">
+            <img src="./static/images/olsen2.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Source</p>
+          </div>
+          <div class="column interpolation-video-column">
+            <div id="interpolation-image-wrapper">
+              Loading...
+            </div>
+            <input class="slider is-fullwidth is-large is-info"
+                   id="interpolation-slider"
+                   step="1" min="0" max="100" value="0" type="range">
+          </div>
+          <div class="column is-3 has-text-centered">
+            <img src="./static/images/timmy3.png"
+                 class="interpolation-image"
+                 alt="Interpolation end reference image."/>
+            <p class="is-bold">Target</p>
+          </div>
+        </div>
+
+        <br/>
+
+        
+
+        <!--/ Interpolating. -->
+
+        <!-- Re-rendering. -->
+ 
+        <!--/ Re-rendering. -->
+
+      </div>
+    </div>
+    <!--/ Animation. -->
+
+
+    <!-- Concurrent Work. -->
+    <!--/ Concurrent Work. -->
+
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p> 
+            We heavily borrowed this source code from <a href='https://nerfies.github.io/'>Nerfies</a>.
+            Thank you for <a href='https://keunhong.com/'>Keunhong Park</a> for developing and open-sourcing this slay template!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
