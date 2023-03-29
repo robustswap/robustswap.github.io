@@ -2,11 +2,13 @@
 
 If you find RobustSwap useful for your work please cite:
 ```
-@article{park2021nerfies
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
+@misc{lee2023robustswap,
+      title={RobustSwap: A Simple yet Robust Face Swapping Model against Attribute Leakage}, 
+      author={Jaeseong Lee and Taewoo Kim and Sunghyun Park and Younggun Lee and Jaegul Choo},
+      year={2023},
+      eprint={2303.15768},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
 ```
 
